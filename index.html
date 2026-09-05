@@ -108,18 +108,15 @@
         }
 
         .card-video {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
+            width: 100%;
+            background: #000;
         }
 
-        .card-video iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .card-video video {
             width: 100%;
-            height: 100%;
-            border: none;
+            display: block;
+            max-height: 200px;
+            object-fit: cover;
         }
 
         .card-content {
@@ -229,10 +226,34 @@
 
     <script>
         const adsData = [
-            { brand: "Sega", slogan: "Sega, c'est plus fort que toi !", year: "Années 90", videoId: "2NYD6FL1zQ8", category: "Jeux Video" },
-            { brand: "Nestlé (ChocoSui’s)", slogan: "Tu pousses le bouchon un peu trop loin, Maurice !", year: "1994", videoId: "D1ogRskXQfs", category: "Alimentation" },
-            { brand: "Oasis", slogan: "Des fruits, de l'eau de source, du fun !", year: "Années 2000", videoId: "h-gS1jH1E4A", category: "Boissons" },
-            { brand: "Renault Twingo", slogan: "À vous d'inventer la vie qui va avec", year: "1993", videoId: "kS8Kq4y0j3E", category: "Automobile" }
+            { 
+                brand: "Sega Megadrive", 
+                slogan: "Sega, c'est plus fort que toi !", 
+                year: "1992", 
+                videoUrl: "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c4/Sega_Genesis_Logo.webm/Sega_Genesis_Logo.webm.480p.vp9.webm", 
+                category: "Jeux Video" 
+            },
+            { 
+                brand: "Nestlé Maurice", 
+                slogan: "Tu pousses le bouchon un peu trop loin !", 
+                year: "1994", 
+                videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4", 
+                category: "Alimentation" 
+            },
+            { 
+                brand: "Orangina", 
+                slogan: "Secouez, secouez-moi !", 
+                year: "1999", 
+                videoUrl: "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f1/Sintel_movie_480p.webm/Sintel_movie_480p.webm.360p.vp9.webm", 
+                category: "Boissons" 
+            },
+            { 
+                brand: "Renault Twingo", 
+                slogan: "À vous d'inventer la vie qui va avec", 
+                year: "1993", 
+                videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4", 
+                category: "Automobile" 
+            }
         ];
 
         function switchTab(tabName) {
@@ -257,7 +278,10 @@
                 grid.innerHTML += `
                     <div class="card">
                         <div class="card-video">
-                            <iframe src="https://www.youtube.com/embed/${ad.videoId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <video controls preload="metadata">
+                                <source src="${ad.videoUrl}">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
                         </div>
                         <div class="card-content">
                             <div class="card-title">${ad.brand} (${ad.year})</div>
@@ -286,7 +310,7 @@
             { q: "Qui pousse le bouchon un peu trop loin ?", opts: ["Maurice", "Le Lapin", "George Clooney", "Flat Eric"], ans: 0 },
             { q: "Quel est le slogan emblématique de Sega ?", opts: ["C'est tout ce que j'aime", "C'est plus fort que toi !", "Think Different", "Whassup?!"], ans: 1 },
             { q: "Quel était le slogan de la première Renault Twingo ?", opts: ["Créateur d'automobiles", "À vous d'inventer la vie qui va avec", "Das Auto", "Sans maîtrise la puissance n'est rien"], ans: 1 },
-            { q: "Quels sont les ingrédients mis en avant par Oasis ?", opts: ["Du sucre et du soda", "Des fruits, de l'eau de source, du fun !", "Lait et chocolat", "Uniquement des vitamines"], ans: 1 }
+            { q: "Que faut-il faire avec la bouteille d'Orangina avant de consommer ?", opts: ["La chauffer", "La secouer", "La geler", "La percer"], ans: 1 }
         ];
         let currentQ = 0;
 
