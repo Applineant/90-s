@@ -107,16 +107,50 @@
             transform: translateY(-5px);
         }
 
+        /* --- Facade video : miniature YouTube + bouton play --- */
         .card-video {
+            position: relative;
             width: 100%;
             background: #000;
+            cursor: pointer;
         }
 
-        .card-video video {
+        .card-video img.thumb {
             width: 100%;
-            display: block;
-            max-height: 200px;
+            height: 200px;
             object-fit: cover;
+            display: block;
+        }
+
+        .card-video iframe {
+            width: 100%;
+            height: 200px;
+            display: block;
+            border: 0;
+        }
+
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 42, 117, 0.85);
+            color: #fff;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 42, 117, 0.6);
+            transition: all 0.2s;
+            pointer-events: none; /* le clic passe au conteneur */
+        }
+
+        .card-video:hover .play-btn {
+            transform: translate(-50%, -50%) scale(1.12);
+            background: var(--accent-pink);
         }
 
         .card-content {
@@ -215,7 +249,7 @@
         <section id="tab-quiz" class="hidden">
             <div class="quiz-box">
                 <div class="score-board">Score : <span id="score">0</span> pt(s)</div>
-                <div class="timer-bar">⏱️ <span id="timer">10</span>s</div>
+                <div class="timer-bar">&#9201;&#65039; <span id="timer">10</span>s</div>
                 
                 <h2 id="quizQuestion">Chargement...</h2>
                 
@@ -225,34 +259,37 @@
     </main>
 
     <script>
+        // On ne stocke QUE l'identifiant YouTube (les 11 caracteres apres "watch?v=").
+        // La miniature est recuperee automatiquement depuis YouTube, et le lecteur
+        // n'est charge qu'au clic. Aucun fichier heberge, aucun souci de droits.
         const adsData = [
-            { 
-                brand: "Sega Megadrive", 
-                slogan: "Sega, c'est plus fort que toi !", 
-                year: "1992", 
-                videoUrl: "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c4/Sega_Genesis_Logo.webm/Sega_Genesis_Logo.webm.480p.vp9.webm", 
-                category: "Jeux Video" 
+            {
+                brand: "Sega Megadrive",
+                slogan: "Sega, c'est plus fort que toi !",
+                year: "1991",
+                videoId: "AOEm5hxUiW8",
+                category: "Jeux Video"
             },
-            { 
-                brand: "Nestlé Maurice", 
-                slogan: "Tu pousses le bouchon un peu trop loin !", 
-                year: "1994", 
-                videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4", 
-                category: "Alimentation" 
+            {
+                brand: "Nestle - Maurice",
+                slogan: "Tu pousses le bouchon un peu trop loin, Maurice !",
+                year: "1995",
+                videoId: "D1ogRskXQfs",
+                category: "Alimentation"
             },
-            { 
-                brand: "Orangina", 
-                slogan: "Secouez, secouez-moi !", 
-                year: "1999", 
-                videoUrl: "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f1/Sintel_movie_480p.webm/Sintel_movie_480p.webm.360p.vp9.webm", 
-                category: "Boissons" 
+            {
+                brand: "Orangina",
+                slogan: "Secouez-moi, secouez-moi !",
+                year: "1984",
+                videoId: "Zye18aHtThU",
+                category: "Boissons"
             },
-            { 
-                brand: "Renault Twingo", 
-                slogan: "À vous d'inventer la vie qui va avec", 
-                year: "1993", 
-                videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4", 
-                category: "Automobile" 
+            {
+                brand: "Renault Twingo",
+                slogan: "A vous d'inventer la vie qui va avec",
+                year: "1993",
+                videoId: "5vvF5kWJemw",
+                category: "Automobile"
             }
         ];
 
@@ -277,11 +314,9 @@
             data.forEach(ad => {
                 grid.innerHTML += `
                     <div class="card">
-                        <div class="card-video">
-                            <video controls preload="metadata">
-                                <source src="${ad.videoUrl}">
-                                Votre navigateur ne supporte pas la lecture vidéo.
-                            </video>
+                        <div class="card-video" data-id="${ad.videoId}" onclick="loadPlayer(this)" title="Lire la pub ${ad.brand}">
+                            <img class="thumb" src="https://img.youtube.com/vi/${ad.videoId}/hqdefault.jpg" alt="Miniature pub ${ad.brand}" loading="lazy">
+                            <div class="play-btn">&#9654;</div>
                         </div>
                         <div class="card-content">
                             <div class="card-title">${ad.brand} (${ad.year})</div>
@@ -293,10 +328,22 @@
             });
         }
 
+        // Au clic : on remplace la miniature par le vrai lecteur YouTube qui demarre.
+        function loadPlayer(el) {
+            const id = el.dataset.id;
+            el.innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0"
+                        title="Lecteur YouTube"
+                        allow="autoplay; encrypted-media; picture-in-picture; web-share"
+                        allowfullscreen></iframe>`;
+            el.onclick = null;
+            el.style.cursor = 'default';
+        }
+
         function filterAds() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = adsData.filter(ad => 
-                ad.brand.toLowerCase().includes(query) || 
+            const filtered = adsData.filter(ad =>
+                ad.brand.toLowerCase().includes(query) ||
                 ad.slogan.toLowerCase().includes(query)
             );
             renderCatalogue(filtered);
@@ -308,8 +355,8 @@
 
         const questions = [
             { q: "Qui pousse le bouchon un peu trop loin ?", opts: ["Maurice", "Le Lapin", "George Clooney", "Flat Eric"], ans: 0 },
-            { q: "Quel est le slogan emblématique de Sega ?", opts: ["C'est tout ce que j'aime", "C'est plus fort que toi !", "Think Different", "Whassup?!"], ans: 1 },
-            { q: "Quel était le slogan de la première Renault Twingo ?", opts: ["Créateur d'automobiles", "À vous d'inventer la vie qui va avec", "Das Auto", "Sans maîtrise la puissance n'est rien"], ans: 1 },
+            { q: "Quel est le slogan emblematique de Sega ?", opts: ["C'est tout ce que j'aime", "C'est plus fort que toi !", "Think Different", "Whassup?!"], ans: 1 },
+            { q: "Quel etait le slogan de la premiere Renault Twingo ?", opts: ["Createur d'automobiles", "A vous d'inventer la vie qui va avec", "Das Auto", "Sans maitrise la puissance n'est rien"], ans: 1 },
             { q: "Que faut-il faire avec la bouteille d'Orangina avant de consommer ?", opts: ["La chauffer", "La secouer", "La geler", "La percer"], ans: 1 }
         ];
         let currentQ = 0;
@@ -325,10 +372,10 @@
             clearInterval(interval);
             timer = 10;
             document.getElementById('timer').innerText = timer;
-            
+
             const q = questions[currentQ];
             document.getElementById('quizQuestion').innerText = q.q;
-            
+
             const optsDiv = document.getElementById('optionsGrid');
             optsDiv.innerHTML = '';
             q.opts.forEach((opt, idx) => {
@@ -358,7 +405,7 @@
                 loadQuestion();
             } else {
                 clearInterval(interval);
-                document.getElementById('quizQuestion').innerText = `Partie terminée ! Score final : ${score} pt(s)`;
+                document.getElementById('quizQuestion').innerText = `Partie terminee ! Score final : ${score} pt(s)`;
                 document.getElementById('optionsGrid').innerHTML = `<button class="opt-btn" onclick="startQuiz()">Recommencer</button>`;
             }
         }
