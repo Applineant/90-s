@@ -229,10 +229,8 @@
 
     <script>
         const adsData = [
-            { brand: "Sega", slogan: "Sega, c'est plus fort que toi !", year: "Années 90", videoId: "kL_M3X9E9E0", category: "Jeux Video" },
-            { brand: "Nestlé (ChocoSui’s)", slogan: "Tu pousses le bouchon un peu trop loin, Maurice !", year: "1994", videoId: "E3r_S3O1Wb8", category: "Alimentation" },
-            { brand: "Orangina Rouge", slogan: "Mais pourquoi est-il aussi méchant ?", year: "1999", videoId: "L3X8J9K1L2M", category: "Boissons" },
-            { brand: "118 218", slogan: "Toutouyoutou", year: "2004", videoId: "N1_P8Q2R3S4", category: "Services" }
+            { brand: "Sega", slogan: "Sega, c'est plus fort que toi !", year: "Années 90", videoId: "2NYD6FL1zQ8", category: "Jeux Video" },
+            { brand: "Nestlé (ChocoSui’s)", slogan: "Tu pousses le bouchon un peu trop loin, Maurice !", year: "1994", videoId: "D1ogRskXQfs", category: "Alimentation" }
         ];
 
         function switchTab(tabName) {
@@ -257,7 +255,7 @@
                 grid.innerHTML += `
                     <div class="card">
                         <div class="card-video">
-                            <iframe src="https://www.youtube-nocookie.com/embed/${ad.videoId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe src="https://www.youtube.com/embed/${ad.videoId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div class="card-content">
                             <div class="card-title">${ad.brand} (${ad.year})</div>
@@ -284,8 +282,7 @@
 
         const questions = [
             { q: "Qui pousse le bouchon un peu trop loin ?", opts: ["Maurice", "Le Lapin", "George Clooney", "Flat Eric"], ans: 0 },
-            { q: "Quel est le slogan emblématique de Sega ?", opts: ["C'est tout ce que j'aime", "C'est plus fort que toi !", "Think Different", "Whassup?!"], ans: 1 },
-            { q: "Pourquoi le citron d'Orangina Rouge est-il si méchant ?", opts: ["Parce qu'il est aigre", "PARCE QUE !", "Parce qu'il n'a pas de jus", "On ne sait pas"], ans: 1 }
+            { q: "Quel est le slogan emblématique de Sega ?", opts: ["C'est tout ce que j'aime", "C'est plus fort que toi !", "Think Different", "Whassup?!"], ans: 1 }
         ];
         let currentQ = 0;
 
